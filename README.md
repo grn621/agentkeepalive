@@ -201,7 +201,11 @@ const agent = new HttpsAgent({
 // Use in your Lambda handler
 exports.handler = async (event) => {
   const res = await new Promise((resolve, reject) => {
-    https.get('https://api.example.com/data', { agent }, resolve).on('error', reject);
+    https.get('https://api.example.com/data', { agent }, (res) => {
+      res.resume(); // drain the response to free the socket back to the pool
+      res.on('end', () => resolve(res));
+      res.on('error', reject);
+    }).on('error', reject);
   });
   // ...
 };

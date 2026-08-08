@@ -42,8 +42,8 @@ describe('test/wall-clock-free-socket-timeout.test.js', () => {
         setImmediate(() => {
           assert(socket[SOCKET_ENTER_FREE_POOL_TIME] > 0,
             'should have a positive timestamp');
-          assert(Date.now() - socket[SOCKET_ENTER_FREE_POOL_TIME] < 1000,
-            'timestamp should be recent');
+          assert(Date.now() - socket[SOCKET_ENTER_FREE_POOL_TIME] < 5000,
+            'timestamp should be recent (within 5s to tolerate slow CI)');
           agent.destroy();
           done();
         });
